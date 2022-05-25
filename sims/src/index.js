@@ -11,40 +11,62 @@ const OpButton = ({val, onClick}) => {
     onClick(val);
   }
 
-  if (val === 5) {
-    return (
-      <div>
-        <button onClick={handleClick}>+5</button>
-      </div>
-    )
-  }
-
-  else {
-    return (
-      <div>
-        <button onClick={handleClick}>+10</button>
-      </div>
-    )
-  }
+  return (
+    <div>
+      <button onClick={handleClick}>+</button>
+    </div>
+  )
   
 };
 
 // Child Status Bar
+const StatusBar = (props) => {
+  const { curr } = props;
+
+  let curr_color;
+  if (curr > 66) curr_color = '#00FF00';
+  else if (curr > 33) curr_color = '#FFFF00';
+  else curr_color = '#FF0000';
+
+
+  const containerStyles = {
+    height: 20,
+    width: '150px',
+    backgroundColor: "#e0e0de",
+    borderRadius: 50
+  }
+
+  const fillerStyles = {
+    height: '100%',
+    width: `${curr}px`,
+    backgroundColor: `${curr_color}`,
+    borderRadius: 'inherit',
+    textAlign: 'right'
+  }
+
+  return (
+    <div style={containerStyles}>
+      <div style={fillerStyles}></div>
+    </div>
+  );
+};
+
+// Child Status Items
 const StatusItem = ({itemName, rate}) => {
 
-  let [itemVal, setItemVal] = useState(100);
+  let [itemVal, setItemVal] = useState(150);
 
   const changeVal = val => {
     let newVal = itemVal + val;
-    if (newVal > 100) newVal = 100;
+    if (newVal > 150) newVal = 150;
     setItemVal(newVal);
   }
 
   useEffect(() => {
     const interval = setInterval(() => {
-      let newVal = itemVal - rate/10;
+      let newVal = itemVal - rate/1;
       if (newVal > 0) {
-        setItemVal(itemVal => itemVal - rate/10);
+        setItemVal(itemVal => itemVal - rate/1);
       } else {
         setItemVal(itemVal => itemVal - itemVal);
       }
@@ -54,9 +76,11 @@ const StatusItem = ({itemName, rate}) => {
 
   return (
     <div className = "item">
-      <p>{itemName} {Math.floor(itemVal)}</p>
+      <p>{itemName}</p>
+      <div className="status">
+        <StatusBar curr={Math.floor(itemVal)} />
+      </div>
       <div className = "buttons">
-        <OpButton val={5} onClick={changeVal} />
         <OpButton val={10} onClick={changeVal}/>
       </div>
     </div>
@@ -67,7 +91,7 @@ const StatusItem = ({itemName, rate}) => {
 const App = () => {
 
   return (
-    <div>
+    <div className='full'>
       <h1>User's Needs</h1>
       <div className="form">
         <div className='status_row'>
@@ -80,6 +104,9 @@ const App = () => {
           <StatusItem itemName = {"Social"} rate = {2} />
           <StatusItem itemName = {"Hygiene"} rate = {2} />
         </div>
+      </div>
+      <div className='credit'>
+        GitHub: @thomasreynolds4881
       </div>
     </div>
   )
