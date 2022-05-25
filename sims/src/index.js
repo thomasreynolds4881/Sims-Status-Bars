@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-const { useState } = React;
+const { useState, useEffect } = React;
 
 // Child Minus/Add Button
 const OpButton = ({val, onClick}) => {
@@ -11,10 +11,10 @@ const OpButton = ({val, onClick}) => {
     onClick(val);
   }
 
-  if (val === -1) {
+  if (val === 5) {
     return (
       <div>
-        <button onClick={handleClick}>-</button>
+        <button onClick={handleClick}>+5</button>
       </div>
     )
   }
@@ -22,7 +22,7 @@ const OpButton = ({val, onClick}) => {
   else {
     return (
       <div>
-        <button onClick={handleClick}>+</button>
+        <button onClick={handleClick}>+10</button>
       </div>
     )
   }
@@ -30,22 +30,35 @@ const OpButton = ({val, onClick}) => {
 };
 
 // Child Status Bar
-const StatusItem = ({itemName}) => {
+const StatusItem = ({itemName, rate}) => {
 
   let [itemVal, setItemVal] = useState(100);
 
   const changeVal = val => {
-    let newVal = itemVal + val * 10;
+    let newVal = itemVal + val;
     if (newVal > 100) newVal = 100;
-    if (newVal < 0) newVal = 0;
     setItemVal(newVal);
   }
 
+  useEffect(() => {
+    const interval = setInterval(() => {
+      let newVal = itemVal - rate/10;
+      if (newVal > 0) {
+        setItemVal(itemVal => itemVal - rate/10);
+      } else {
+        setItemVal(itemVal => itemVal - itemVal);
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [rate, itemVal]);
+
   return (
     <div className = "item">
-      <p>{itemName}: {itemVal}</p>
-      <OpButton val={-1} onClick={changeVal} />
-      <OpButton val={1} onClick={changeVal}/>
+      <p>{itemName} {Math.floor(itemVal)}</p>
+      <div className = "buttons">
+        <OpButton val={5} onClick={changeVal} />
+        <OpButton val={10} onClick={changeVal}/>
+      </div>
     </div>
   )
 };
@@ -54,14 +67,20 @@ const StatusItem = ({itemName}) => {
 const App = () => {
 
   return (
-    <div className="form">
-      <h1>Status</h1>
-      <StatusItem itemName = {"Bladder"} initVal = {100} />
-      <StatusItem itemName = {"Fun"} initVal = {100} />
-      <StatusItem itemName = {"Hunger"} initVal = {100} />
-      <StatusItem itemName = {"Social"} initVal = {100} />
-      <StatusItem itemName = {"Energy"} initVal = {100} />
-      <StatusItem itemName = {"Hygiene"} initVal = {100} />
+    <div>
+      <h1>User's Needs</h1>
+      <div className="form">
+        <div className='status_row'>
+          <StatusItem itemName = {"Bladder"} rate = {4} />
+          <StatusItem itemName = {"Hunger"} rate = {3} />
+          <StatusItem itemName = {"Energy"} rate = {1} />
+        </div>
+        <div className='status_row'>
+          <StatusItem itemName = {"Fun"} rate = {2} />
+          <StatusItem itemName = {"Social"} rate = {2} />
+          <StatusItem itemName = {"Hygiene"} rate = {2} />
+        </div>
+      </div>
     </div>
   )
 };
