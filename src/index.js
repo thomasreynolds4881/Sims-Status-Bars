@@ -18,7 +18,7 @@ const OpButton = ({val, onClick}) => {
   }
 
   return (
-    <div>
+    <div className="opbutton">
       <button onClick={handleClick}>+</button>
     </div>
   )
@@ -107,7 +107,7 @@ const StatusItem = ({itemName, rate}) => {
           <StatusBar curr={Math.floor(itemVal)} col={curr_color} />
         </div>
       </div>
-      <div className = "buttons">
+      <div className = "mybuttons">
         <OpButton val={10} onClick={changeVal}/>
       </div>
     </div>
