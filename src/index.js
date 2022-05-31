@@ -1,11 +1,6 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
-import img_bladder from './imgs/bladder.png'
-import img_fun from './imgs/fun.png'
-import img_hunger from './imgs/hunger.png'
-import img_social from './imgs/social.png'
-import img_energy from './imgs/energy.png'
 import img_hygiene from './imgs/hygiene.png'
 
 const { useState, useEffect } = React;
@@ -55,7 +50,7 @@ const StatusBar = (props) => {
 };
 
 // Child Status Items
-const StatusItem = ({itemName, rate}) => {
+const StatusItem = props => {
 
   let [itemVal, setItemVal] = useState(150);
 
@@ -67,23 +62,18 @@ const StatusItem = ({itemName, rate}) => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      let newVal = itemVal - rate/10;
+      let newVal = itemVal - props.rate/10;
       if (newVal > 0) {
-        setItemVal(itemVal => itemVal - rate/10);
+        setItemVal(itemVal => itemVal - props.rate/10);
       } else {
         setItemVal(itemVal => itemVal - itemVal);
       }
     }, 1000);
     return () => clearInterval(interval);
-  }, [rate, itemVal]);
+  }, [props.rate, itemVal]);
 
   let curr_img;
-  if (itemName === "Bladder") curr_img = img_bladder;
-  else if (itemName === "Fun") curr_img = img_fun;
-  else if (itemName === "Hunger") curr_img = img_hunger;
-  else if (itemName === "Social") curr_img = img_social;
-  else if (itemName === "Energy") curr_img = img_energy;
-  else curr_img = img_hygiene;
+  curr_img = img_hygiene;
 
   let curr_color;
   if (itemVal > 100) curr_color = '#00FF00';
@@ -100,7 +90,7 @@ const StatusItem = ({itemName, rate}) => {
 
   return (
     <div className = "item">
-      <p>{itemName}</p>
+      <p>{props.itemName}</p>
       <div className="status">
         <img style={imgStyles} src={curr_img} alt="" />
         <div>
@@ -114,23 +104,67 @@ const StatusItem = ({itemName, rate}) => {
   )
 };
 
+// List of bars
+const CardList = props => (
+  <div>
+    {console.log(props)}
+    {props.cards.map(card => (
+      <StatusItem {...card} />
+    ))}
+  </div>
+)
+
+// Input Form
+const Form = (props) => {
+  const [item, setItem] = useState('')
+  const [rate, setRate] = useState('')
+
+  const handleSubmit = event => {
+    event.preventDefault()
+    props.onSubmit({key: item, itemName: item, rate: rate})
+    setItem('')
+  }
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={item}
+        onChange={event => setItem(event.target.value)}
+        placeholder="Enter bar name..."
+        required
+      />
+      <select
+        name="rate"
+        onChange={event => setRate(event.target.value)}
+        placeholder="Default">
+        <option value={1}>Very Slow</option>
+        <option value={5}>Slow</option>
+        <option value={10}>Default</option>
+        <option value={30}>Fast</option>
+        <option value={50}>Very Fast</option>
+      </select>
+      <button type="submit">Add bar</button>
+    </form>
+  )
+}
+
 // Parent App
 const App = () => {
 
+  const [cards, setCards] = useState([])
+
+  const addNewBar = cardInfo => {
+    setCards(cards.concat(cardInfo))
+  }
+
   return (
     <div className='full'>
-      <h1>User's Needs</h1>
+      <h1>Your Status</h1>
       <div className="form">
-        <div className='status_row'>
-          <StatusItem itemName = {"Bladder"} rate = {4} />
-          <StatusItem itemName = {"Hunger"} rate = {3} />
-          <StatusItem itemName = {"Energy"} rate = {1} />
-        </div>
-        <div className='status_row'>
-          <StatusItem itemName = {"Fun"} rate = {2} />
-          <StatusItem itemName = {"Social"} rate = {2} />
-          <StatusItem itemName = {"Hygiene"} rate = {2} />
-        </div>
+        <h2>Create New Bars</h2>
+        <Form onSubmit={addNewBar} />
+        <CardList cards={cards} />
       </div>
       <div className='credit'>
         GitHub: @thomasreynolds4881
