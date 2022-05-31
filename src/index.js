@@ -6,7 +6,7 @@ import img_hygiene from './imgs/hygiene.png'
 const { useState, useEffect } = React;
 
 // Child Minus/Add Button
-const OpButton = ({val, onClick}) => {
+const OpButton = ({val, onClick, text}) => {
 
   const handleClick = () => {
     onClick(val);
@@ -14,7 +14,7 @@ const OpButton = ({val, onClick}) => {
 
   return (
     <div className="opbutton">
-      <button onClick={handleClick}>+</button>
+      <button onClick={handleClick}>{text}</button>
     </div>
   )
   
@@ -62,9 +62,9 @@ const StatusItem = props => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      let newVal = itemVal - props.rate/10;
+      let newVal = itemVal - props.rate;
       if (newVal > 0) {
-        setItemVal(itemVal => itemVal - props.rate/10);
+        setItemVal(itemVal => itemVal - props.rate);
       } else {
         setItemVal(itemVal => itemVal - itemVal);
       }
@@ -98,7 +98,7 @@ const StatusItem = props => {
         </div>
       </div>
       <div className = "mybuttons">
-        <OpButton val={10} onClick={changeVal}/>
+        <OpButton val={10} text="+" onClick={changeVal}/>
       </div>
     </div>
   )
@@ -117,7 +117,7 @@ const CardList = props => (
 // Input Form
 const Form = (props) => {
   const [item, setItem] = useState('')
-  const [rate, setRate] = useState('')
+  const [rate, setRate] = useState('10')
 
   const handleSubmit = event => {
     event.preventDefault()
@@ -138,11 +138,11 @@ const Form = (props) => {
         name="rate"
         onChange={event => setRate(event.target.value)}
         placeholder="Default">
-        <option value={1}>Very Slow</option>
-        <option value={5}>Slow</option>
-        <option value={10}>Default</option>
-        <option value={30}>Fast</option>
-        <option value={50}>Very Fast</option>
+        <option value={0.2}>Very Slow</option>
+        <option value={0.5}>Slow</option>
+        <option value={1}>Default</option>
+        <option value={2}>Fast</option>
+        <option value={5}>Very Fast</option>
       </select>
       <button type="submit">Add bar</button>
     </form>
@@ -156,6 +156,10 @@ const App = () => {
 
   const addNewBar = cardInfo => {
     setCards(cards.concat(cardInfo))
+  }
+
+  const removeBar = index => {
+    setCards(cards.splice(index, 1))
   }
 
   return (
