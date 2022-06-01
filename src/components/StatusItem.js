@@ -7,6 +7,7 @@ const { useState, useEffect } = React;
 const StatusItem = props => {
 
     let [itemVal, setItemVal] = useState(150);
+    const tick = 5; // how many seconds between ticks
   
     const changeVal = val => {
       let newVal = itemVal + val;
@@ -16,15 +17,15 @@ const StatusItem = props => {
   
     useEffect(() => {
       const interval = setInterval(() => {
-        let newVal = itemVal - props.rate;
+        let newVal = itemVal - props.rate*tick;
         if (newVal > 0) {
-          setItemVal(itemVal => itemVal - props.rate);
+          setItemVal(itemVal => itemVal - props.rate*tick);
         } else {
           setItemVal(itemVal => itemVal - itemVal);
         }
-      }, 1000);
+      }, tick*1000);
       return () => clearInterval(interval);
-    }, [props.rate, itemVal]);
+    }, [props.rate, itemVal, tick]);
   
     let curr_img;
     curr_img = img_hygiene;
