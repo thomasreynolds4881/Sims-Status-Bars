@@ -5,7 +5,7 @@ import img_hygiene from './imgs/hygiene.png'
 
 const { useState, useEffect } = React;
 
-// Child Minus/Add Button
+// Child Plus Button
 const OpButton = ({val, onClick, text}) => {
 
   const handleClick = () => {
@@ -93,12 +93,10 @@ const StatusItem = props => {
       <p>{props.itemName}</p>
       <div className="status">
         <img style={imgStyles} src={curr_img} alt="" />
-        <div>
-          <StatusBar curr={Math.floor(itemVal)} col={curr_color} />
-        </div>
+        <StatusBar curr={Math.floor(itemVal)} col={curr_color} />
       </div>
       <div className = "mybuttons">
-        <OpButton val={10} text="+" onClick={changeVal}/>
+        <OpButton val={20} text="+" onClick={changeVal}/>
       </div>
     </div>
   )
@@ -106,8 +104,8 @@ const StatusItem = props => {
 
 // List of bars
 const CardList = props => (
-  <div>
-    {console.log(props)}
+  <div className='status-bars'>
+    <StatusItem key='Example Bar' itemName='Example Bar' rate={1} />
     {props.cards.map(card => (
       <StatusItem {...card} />
     ))}
@@ -117,34 +115,42 @@ const CardList = props => (
 // Input Form
 const Form = (props) => {
   const [item, setItem] = useState('')
-  const [rate, setRate] = useState('10')
+  const [rate, setRate] = useState('1')
 
   const handleSubmit = event => {
     event.preventDefault()
-    props.onSubmit({key: item, itemName: item, rate: rate})
+    props.onSubmit({key: item, itemName: truncate(item), rate: rate})
     setItem('')
+  }
+
+  function truncate(str){
+    return (str.length > 13) ? str.substr(0, 12) + '...' : str;
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={item}
-        onChange={event => setItem(event.target.value)}
-        placeholder="Enter bar name..."
-        required
-      />
-      <select
-        name="rate"
-        onChange={event => setRate(event.target.value)}
-        placeholder="Default">
-        <option value={0.2}>Very Slow</option>
-        <option value={0.5}>Slow</option>
-        <option value={1}>Default</option>
-        <option value={2}>Fast</option>
-        <option value={5}>Very Fast</option>
-      </select>
-      <button type="submit">Add bar</button>
+      <h2>New Status Bar</h2>
+      <div className='form-items'>
+        <input
+          type="text"
+          value={item}
+          onChange={event => setItem(event.target.value)}
+          placeholder="Enter bar name..."
+          required
+        />
+        <select
+          name="rate"
+          onChange={event => setRate(event.target.value)}
+          defaultValue={props.defaultval}
+          >
+          <option value={0.2}>Very Slow</option>
+          <option value={0.5}>Slow</option>
+          <option value={1}>Default</option>
+          <option value={2}>Fast</option>
+          <option value={5}>Very Fast</option>
+        </select>
+        <button type="submit">Add bar</button>
+      </div>
     </form>
   )
 }
@@ -158,17 +164,16 @@ const App = () => {
     setCards(cards.concat(cardInfo))
   }
 
-  const removeBar = index => {
-    setCards(cards.splice(index, 1))
-  }
-
   return (
     <div className='full'>
-      <h1>Your Status</h1>
-      <div className="form">
-        <h2>Create New Bars</h2>
-        <Form onSubmit={addNewBar} />
-        <CardList cards={cards} />
+      <h1>Sims Status</h1>
+      <div className='module'>
+        <div className="form">
+          <Form onSubmit={addNewBar} defaultval={1} />
+        </div>
+        <div className='card-form'>
+          <CardList cards={cards} />
+        </div>
       </div>
       <div className='credit'>
         GitHub: @thomasreynolds4881
