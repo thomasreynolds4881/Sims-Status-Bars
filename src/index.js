@@ -38,7 +38,7 @@ const App = () => {
         </div>
       </div>
       <div className='credit'>
-        GitHub: @thomasreynolds4881
+        GitHub: thomasreynolds4881
       </div>
     </div>
   )
