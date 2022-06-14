@@ -10,7 +10,7 @@ import img_hygiene from './imgs/hygiene.png'
 
 const { useState, useEffect } = React;
 
-// Child Minus/Add Button
+// Child Button
 const OpButton = ({val, onClick}) => {
 
   const handleClick = () => {
