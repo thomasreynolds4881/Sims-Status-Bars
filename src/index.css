@@ -1,9 +1,9 @@
 body {
   background-color: aliceblue;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  margin: 0 auto;
+  height: 100%;
+  font-family: monospace;
+  align-items: center;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -14,8 +14,10 @@ code {
 }
 
 p {
-  font-size: 25px;
+  font-size: 20px;
   line-height: 0px;
+  margin-bottom: 12px;
+  margin-top: 12px;
 }
 
 h1 {
@@ -24,13 +26,27 @@ h1 {
   background-color:rgb(166, 187, 226);
 }
 
+h2 {
+  margin: 0;
+  text-align: center;
+}
+
+select {
+  height: 22px;
+  margin-right: 1px;
+}
+
+button {
+  margin-left: 1px;
+}
+
+input {
+  margin-bottom: 2px;
+}
+
 .status {
   height:24px;
   width:20%;
-}
-
-.item {
-  display: grid;
 }
 
 .opbutton {
@@ -39,12 +55,15 @@ h1 {
   text-align: center;
 }
 
-.status_row {
-  box-sizing: border-box;
-  display: inline-block;
-  width: 50%;
-  padding-left: 10px;
-  padding-bottom: 10px;
+.status-bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 176px));
+  grid-gap: 5px;
+}
+
+.item {
+  min-height: 10px;
+  padding-left: 5px;
 }
 
 .credit {
@@ -55,12 +74,31 @@ h1 {
 }
 
 .form {
-  max-width: 360px;
+  max-width: 176px;
   max-height: 10%;
   margin: auto;
+  text-align: center;
+  background: #A0C5E8;
+  border-style: solid;
+  border-color: black;
+  padding: 8px;
+}
+
+.card-form {
+  max-width: 360px;
+  max-height: 60vh;
+  margin: auto;
+  margin-top: 8px;
   background: #A0C5E8;
   border-radius: 15px;
   border-style: solid;
   border-color: black;
-  padding: 5px;
+  padding: 8px;
+  overflow-y: scroll;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.card-form::-webkit-scrollbar {
+  display: none;
 }
