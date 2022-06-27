@@ -1,5 +1,6 @@
 import React from 'react';
 
+// operation button
 const OpButton = ({val, onClick, text}) => {
 
     const handleClick = () => {
